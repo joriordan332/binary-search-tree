@@ -48,8 +48,33 @@ class Tree {
         root.right = this.insert(value, root.right)
         
       return root
+    }
 
-
+    delete (value, root = this.root) {
+      if(root == null) {
+        return root
+      }
+      if (value < root.data) {root.left = this.delete(value, root.left)
+      } else if (value > root.data) { root.right = this.delete(value, root.right)
+        
+        
+      } else {
+          if (root.left == null) { return root.right;
+           } if (root.right == null) { return root.left;
+           }
+           root.data = minValue(root.right);
+           root.right = delete(root.data, root.right);
+        } 
+        return root
+    }
+ 
+     minValue = (root) => {
+      let minV = root.data;
+    while (root.left != null) {
+      minV = root.left.data;
+      root = root.left;
+    }
+    return minV;
     }
 
 }
@@ -61,4 +86,6 @@ const tree = new Tree(array)
 tree.prettyPrint(tree.root);
 console.log(array)
 tree.insert(21);
+tree.prettyPrint(tree.root);
+tree.delete(9);
 tree.prettyPrint(tree.root);

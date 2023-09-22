@@ -68,7 +68,7 @@ class Tree {
         return root
     }
  
-     minValue = (root) => {
+     minValue (root) {
       let minV = root.data;
     while (root.left != null) {
       minV = root.left.data;
@@ -77,15 +77,147 @@ class Tree {
     return minV;
     }
 
+
+    find (value, root = this.root) {
+      if(root === null) {
+        return false
+      } if (value === root.data) return root
+
+      if (value < root.data) {  return this.find(value, root.left)
+      } else if (value > root.data) { return this.find(value, root.right)
+        
+    }
+    return root
+  }
+
+  levelOrder(arr = [], queue = [], root = this.root) {
+    if (root === null) return;
+    // Visit the root
+    arr.push(root.data);
+
+    // Traverse to left and right children -> add to queue
+    queue.push(root.left);
+    queue.push(root.right);
+
+    // Move to next level
+    while (queue.length) {
+      const level = queue[0];
+      queue.shift();
+      this.levelOrder(arr, queue, level)
+    }
+
+    return arr;
+  }
+   
+  inOrder(arr = [], root = this.root) {
+    if (root === null) return;
+    
+    // Traverse left subtree
+    if (root.left) this.inOrder(arr, root.left);
+    
+    // Visit the root
+    arr.push(root.data);
+    
+    // Traverse right subtree
+    if (root.right) this.inOrder(arr, root.right);
+   
+    return arr;
+  }
+  
+  preOrder(arr = [], root = this.root) {
+    if (root === null) return;
+    
+    arr.push(root.data);
+    // Traverse left subtree
+    if (root.left) this.preOrder(arr, root.left);
+    
+    // Visit the root
+    
+    
+    // Traverse right subtree
+    if (root.right) this.preOrder(arr, root.right);
+   
+    return arr;
+  }
+
+
+  postOrder(arr = [], root = this.root) {
+    if (root === null) return;
+    
+
+    if (root.right) this.postOrder(arr, root.right);
+    // Traverse left subtree
+    else if (root.left) this.postOrder(arr, root.left);
+    
+    
+    // Traverse right subtree
+    
+   
+    arr.push(root.data);
+
+    return arr;
+  }
+
+  height(node = this.root) {
+    if (node === null) return 0;
+
+    const leftHeight = this.height(node.left);
+    const rightHeight = this.height(node.right);
+
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  depth(value, root = this.root, depth = 0) {
+    
+    if (root === null) return 0;
+    
+    if (value === root.data)  
+    return depth
+    
+    if (value < root.data) { return this.depth(value, root.left, depth +=1)
+    } else  { return this.depth(value, root.right, depth +=1);    
+    }
+  }
+
+  isBalanced(root = this.root) {
+    if(root == null) return false
+
+    const leftHeight = this.isBalanced(root.left);
+    const rightHeight = this.isBalanced(root.right);
+
+    if (leftHeight - rightHeight >= 2 || rightHeight - leftHeight >=2) return false
+    else return 'Tree is balanced'
+  }
+  
+  rebalance(root = this.root) {
+    let arr = this.levelOrder([], [], root);
+    arr.sort((a, b) => a - b);
+    return this.root = this.buildTree(arr);
+  }
+
+
+   randomArray = (size) => {
+    return Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+  };
+  
 }
 
 
-
 let array = [1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 6345]
-const tree = new Tree(array)
+const tree = new Tree([1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 6345])
 tree.prettyPrint(tree.root);
 console.log(array)
 tree.insert(21);
 tree.prettyPrint(tree.root);
 tree.delete(9);
 tree.prettyPrint(tree.root);
+console.log(tree.find(67));
+console.log(tree.levelOrder());
+console.log(tree.inOrder());
+console.log(tree.preOrder());
+console.log(tree.postOrder());
+console.log(tree.height());
+console.log(tree.depth(6345));
+console.log(tree.isBalanced());
+console.log(tree.rebalance());
+const newTree = new Tree(randomArray(30));
